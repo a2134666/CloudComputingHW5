@@ -1,0 +1,41 @@
+<style>
+body {
+font-family: arial,verdana, sans-serif;
+font-size: 12px;
+}
+.accordion-trigger:before {
+content: "";
+display: inline-block;
+height: 0;
+width: 0;
+-webkit-transform: rotate(360deg);
+border-width: 5px 10px;
+border-style: solid;
+border-color: transparent;
+border-left-color: #666666;  
+border-right-width: 0;
+margin-right: 0.5em;
+-webkit-transition: -webkit-transform 0.3s;
+transition: transform 0.3s;
+-ms-transform: rotate(0);
+transform: rotate(0);
+
+}
+.accordion-trigger.is-active:before {
+-webkit-transform: rotate(90deg);
+-ms-transform: rotate(90deg);
+transform: rotate(90deg);  
+border-left-color: Black;
+}
+.container 
+{
+background-color: #e6e6e6;
+height: 18px;
+width: 100px;
+padding: 8px 0px 0px 8px;
+border: 1px solid #999999;
+-webkit-border: 6px;
+-moz-border-radius: 6px;
+border-radius: 6px;     
+}
+</style>

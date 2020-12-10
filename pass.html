@@ -1,0 +1,81 @@
+﻿<html>
+<head>	
+	<!--meta_Start-->
+	<!-- <meta http-equiv="refresh" content="20; url=index.html"></meta> -->
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="Page-Enter" content="revealTrans(Duration=20,Transition=13)">
+	<meta http-equiv="Page-Exit" content="revealTrans(Duration=20,Transition=13)">
+	<meta http-equiv="expires" content="0"> <!--1/30新加入用戶端防止快取 -->
+	<meta http-equiv="cache-control" content="no-cache"> <!--1/30新加入用戶端防止快取 -->
+	<meta http-equiv="pragma" content="no-cache"> <!--1/30新加入用戶端防止快取 -->
+	<!--meta_end-->
+	
+	<!--css-->
+	<link rel="stylesheet" type="text/css" href="css/webkit-animation.css" /><!--CSS INPUT-->
+	<link rel="stylesheet" type="text/css" href="css/animate.css"><!--特效-->
+	<link rel="stylesheet" type="text/css" href="css/webkit-animation-duration.css"><!--特效延遲-->
+	<link rel='stylesheet' href='css/style.css'><!--touchaudio-->
+	<style type="text/css">
+	#photo1
+	{z-index: 2; position: fixed; top: 0px; left: 0px; opacity: 1.2;}
+	#photo2
+	{z-index: 2; position: fixed; top: 1720px; left: 880px; opacity: 1.0;}
+	#photo3
+	{z-index: 2; position: fixed; top: 1700px; left: 530px; opacity: 1.0;}
+	
+	#number
+	{z-index: 10; position: fixed; top: 920px; left: 515px; opacity: 1.2;}	
+	</style>
+</head>
+	
+<body>
+	<div id="number" style="font-family:微軟正黑體; font-weight:bold; color:#ffffff; font-size: 90px; ">
+		
+	</div>
+ 	<div id="photo1">
+		<img src="images/page3/互動遊戲畫面3_背景主題文字_20201127.jpg" width="1080" height="1920">
+	</div>
+	<div id="photo2">
+		<a href="index.html">
+			<img src="images/page3/互動遊戲畫面3_返回鍵_20201127.png" width="159.84" height="159.84">
+		</a>
+	</div>		
+	
+	<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-firestore.js"></script>
+	<script type="text/javascript">
+		// Initialize Cloud Firestore through Firebase
+		firebase.initializeApp({
+		// apiKey: '### FIREBASE API KEY ###',
+		// authDomain: '### FIREBASE AUTH DOMAIN ###',
+		projectId: "inspired-berm-292410"
+		});
+		var firestore = firebase.firestore();
+		const today  = new Date().toISOString().substr(0,10);
+		const docRef = firestore.collection("AWA").doc(today);
+
+		firestore.runTransaction(transaction => {
+			return transaction.get(docRef).then(doc => {
+				if(doc.exists){
+					transaction.update(docRef, {pass: firebase.firestore.FieldValue.increment(1)});
+				}
+				else{
+					transaction.set(docRef, {pass: 1, fail:0});
+				}
+			})
+		}).then(() => {
+			console.log('set data successful');
+		}).catch(error => {
+			console.log('Error: ', error);
+		});
+
+		$(document).ready(function() {
+			const urlParams = new URLSearchParams(window.location.search);
+			const s = urlParams.get('s');
+			$("#number").text(s);
+			//fetch("http://localhost/AWA/log.php?result=1&second="+s).catch(error => console.error(error));
+		});  
+	</script>
+</body>
+</html>

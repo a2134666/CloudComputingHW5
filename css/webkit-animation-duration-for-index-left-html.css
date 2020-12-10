@@ -1,0 +1,16 @@
+*{ margin:0px; padding:px; border:none}
+#rainbow1{
+  -webkit-animation-duration: 6.5s;/*設定該物件特效過程的時間，3.5s代表3.5秒。*/
+}
+#rainbow2{
+  -webkit-animation-duration: 7.2s;/*設定該物件特效過程的時間，3.5s代表3.5秒。*/
+}
+#rainbow3{
+  -webkit-animation-duration: 7.7s;/*設定該物件特效過程的時間，3.5s代表3.5秒。*/
+}
+#rainbow4{
+  -webkit-animation-duration: 8.2s;/*設定該物件特效過程的時間，3.5s代表3.5秒。*/
+}
+#rainbow5{
+  -webkit-animation-duration: 8.7s;/*設定該物件特效過程的時間，3.5s代表3.5秒。*/
+}

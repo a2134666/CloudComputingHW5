@@ -1,0 +1,471 @@
+﻿<html>
+<head>	
+  <!--meta_Start-->
+  <meta http-equiv="refresh" content="20; url=fail.html"></meta>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Page-Enter" content="revealTrans(Duration=20,Transition=13)">
+  <meta http-equiv="Page-Exit" content="revealTrans(Duration=20,Transition=13)">
+  <meta http-equiv="expires" content="0"> <!--1/30新加入用戶端防止快取 -->
+  <meta http-equiv="cache-control" content="no-cache"> <!--1/30新加入用戶端防止快取 -->
+  <meta http-equiv="pragma" content="no-cache"> <!--1/30新加入用戶端防止快取 -->
+  <!--meta_end-->
+	
+	<!--css-->
+	<link rel="stylesheet" type="text/css" href="css/webkit-animation.css" /><!--CSS INPUT-->
+	<link rel="stylesheet" type="text/css" href="css/animate.css"><!--特效-->
+	<link rel="stylesheet" type="text/css" href="css/webkit-animation-duration.css"><!--特效延遲-->
+  <link rel='stylesheet' href='css/style.css'><!--touchaudio-->
+  <link rel="stylesheet" href="iframe/countdown.css">
+	<style type="text/css">
+
+	#photo1
+	{z-index: 2; position: fixed; top: 0px; left: 0px; opacity: 1.2;}
+	
+	#count54321
+	{z-index: 3; position: fixed; top: 70px; left: 60px; opacity: 1.0; font-family:微軟正黑體; font-weight:bold; color:#ffffff; font-size:30px;}
+	
+	#photo3
+	{z-index: 2; position: fixed; top: 1700px; left: 530px; opacity: 1.0;}
+	#iframe_1
+	{z-index: 10; position: fixed; top: 100px; left: 240px; opacity: 1.2;}	
+	</style>
+	<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+	
+</head>
+	
+<body>	
+ 	<div id="photo1">
+			<img src="images/page2/互動遊戲畫面2_背景_20201127.jpg" width="1080" height="1920">
+	</div>
+  
+  <div id="iframe_1" w3-include-html="iframe/index.html" >
+	</div>
+	
+  <script src="https://www.w3schools.com/lib/w3.js"></script> 
+  <script type="text/javascript"> 
+    w3.includeHTML();
+		window.onload = function(){ 
+			var counter = 0; 
+			setInterval(function() {
+        counter++; 
+      }, 1000);
+        
+      var answer = [[1,2,3,4,5,6].sort(() => Math.random() - 0.5),[3,4,1,5,6,2]];console.log(answer);
+      // randomize left block
+      var l1_imgs = [
+        "images/page2/Q1一般/A1-",
+        "images/page2/Q2運動/A2-",
+        "images/page2/Q3經濟/A3-",
+        "images/page2/Q4泥地/A4-",
+        "images/page2/Q5沙地/A5-",
+        "images/page2/Q6雪地/A6-"
+        ];
+      answer[0].forEach((item,index) => {
+        // content of l1-block is answer[0][0]
+        // so, if answer[0][0] == 2, means l1-block contains one of the image in "Q2運動"
+        const i = Math.ceil(Math.random() * 3);
+        l1_imgs[item-1] += i + ".jpg";
+        $(`#l${index+1}-block > div > img`).prop("src", l1_imgs[item-1]);
+      });
+
+      var left_selected = "", correct = false, correct_count = 0;
+      $(".left").on("click", function(){
+        // clean last select
+        if(left_selected && !correct){
+          $("#"+left_selected).children().eq(2).show();
+          $("#"+left_selected).children().eq(1).hide();
+        }
+        
+        // select this
+        $(this).children().eq(2).hide()
+        $(this).children().eq(1).show()
+        left_selected = $(this).prop("id");
+        
+        correct = false;
+      });
+      $(".right").on("click", function(){
+        // check answer
+        if(left_selected){
+          ans_l = answer[0][left_selected[1]-1];
+          ans_r = answer[1][$(this).prop("id")[1]-1];
+          if(ans_l == ans_r){
+            // write line and show tick on right image
+            let line = "#l"+left_selected[1]+"-r"+$(this).prop("id")[1];
+            $(line + " > img").prop("src", "images/line1.png");
+            $(line).show();
+            $(this).children().eq(1).show();
+            
+            // if all correct, redirect
+            if(correct_count == 5){
+              window.location = "pass.html?s="+counter;
+            }
+            else{
+              correct_count++;
+            }
+            
+            // hide indicate hand
+            correct = true;
+            
+            // disable click function
+            $("#"+left_selected).off("click");
+            $(this).off("click");
+            left_selected = "";
+          }
+          else{
+            correct = false;
+            // show false
+            let line = "#l"+left_selected[1]+"-r"+$(this).prop("id")[1];
+            $(line + " > img").prop("src", "images/line2.png");
+            $(line).show();
+            $(this).children().eq(2).show();
+            var that = this;
+            setTimeout(function(){
+              $(line).hide();
+              $(that).children().eq(2).hide();
+            }, 1000);
+          }
+        }
+      });
+		};
+	</script>
+	
+	<!--右側回答問題-->
+	
+	<!--右側點選button 出現打勾-->
+  <div id="r1-block" class="right">
+    <div style="z-index: 30; position: fixed; top: 515px; left: 680px; opacity: 1.0;-webkit-transform:rotate(0deg);">
+      <img src="images/page2/answer/互動遊戲畫面2_20201127_ECO_字.png" width="330" height="175">
+    </div>
+    <div id="r1-y" hidden style="z-index: 30; position: fixed; top: 515px; left: 680px; opacity: 1.0;-webkit-transform:rotate(0deg);" >
+      <img src="images/y.png" width="318" height="160" style="border-radius:15px; -moz-border-radius:25px;">
+    </div>
+    <div id="r1-n" hidden style="z-index: 30; position: fixed; top: 515px; left: 680px; opacity: 1.0;-webkit-transform:rotate(0deg);" >
+      <img src="images/no.png" width="318" height="160" style="border-radius:15px; -moz-border-radius:25px;">
+    </div>
+	</div>
+	<!--右側點選button 出現打勾-->
+	
+	
+	<!--右側點選button 出現打勾-->
+  <div id="r2-block" class="right">
+    <div style="z-index: 30; position: fixed; top: 745px; left: 680px; opacity: 1.0;-webkit-transform:rotate(0deg);" >
+      <img src="images/page2/answer/互動遊戲畫面2_20201127_MUD_字.png" width="330" height="175">
+    </div>
+    <div id="r2-y" hidden style="z-index: 30; position: fixed; top: 745px; left: 680px; opacity: 1.0;-webkit-transform:rotate(0deg);" >
+      <img src="images/y.png" width="318" height="160" style="border-radius:15px; -moz-border-radius:25px;">
+    </div>
+    <div id="r2-n" hidden style="z-index: 30; position: fixed; top: 745px; left: 680px; opacity: 1.0;-webkit-transform:rotate(0deg);" >
+      <img src="images/no.png" width="318" height="160" style="border-radius:15px; -moz-border-radius:25px;">
+    </div>
+	</div>
+	<!--右側點選button 出現打勾-->
+	
+	
+	<!--右側點選button 出現打勾-->
+  <div id="r3-block" class="right">
+    <div style="z-index: 30; position: fixed; top: 970px; left: 680px; opacity: 1.0;-webkit-transform:rotate(0deg);" >
+      <img src="images/page2/answer/互動遊戲畫面2_20201127_NORMAL_字.png" width="330" height="175">
+    </div>
+    <div id="r3-y" hidden style="z-index: 30; position: fixed; top: 970px; left: 680px; opacity: 1.0;-webkit-transform:rotate(0deg);" >
+      <img src="images/y.png" width="318" height="160" style="border-radius:15px; -moz-border-radius:25px;">
+    </div>
+    <div id="r3-n" hidden  style="z-index: 30; position: fixed; top: 970px; left: 680px; opacity: 1.0;-webkit-transform:rotate(0deg);" >
+      <img src="images/no.png" width="318" height="160" style="border-radius:15px; -moz-border-radius:25px;">
+    </div>
+	</div>
+	<!--右側點選button 出現打勾-->
+	
+	<!--右側點選button 出現打勾-->
+  <div id="r4-block" class="right">
+    <div style="z-index: 30; position: fixed; top: 1195px; left: 680px; opacity: 1.0;-webkit-transform:rotate(0deg);" >
+      <img src="images/page2/answer/互動遊戲畫面2_20201127_SAND_字.png" width="330" height="175">
+    </div>
+    <div id="r4-y" hidden style="z-index: 30; position: fixed; top: 1195px; left: 680px; opacity: 1.0;-webkit-transform:rotate(0deg);" >
+      <img src="images/y.png" width="318" height="160" style="border-radius:15px; -moz-border-radius:25px;">
+    </div>
+    <div id="r1-n" hidden style="z-index: 30; position: fixed; top: 1195px; left: 680px; opacity: 1.0;-webkit-transform:rotate(0deg);" >
+      <img src="images/no.png" width="318" height="160" style="border-radius:15px; -moz-border-radius:25px;">
+    </div>
+	</div>
+	<!--右側點選button 出現打勾-->
+	
+	<!--右側點選button 出現打勾-->
+  <div id="r5-block" class="right">
+    <div style="z-index: 30; position: fixed; top: 1420px; left: 680px; opacity: 1.0;-webkit-transform:rotate(0deg);" >
+      <img src="images/page2/answer/互動遊戲畫面2_20201127_SNOW_字.png" width="330" height="175">
+    </div>
+    <div id="r5-y" hidden style="z-index: 30; position: fixed; top: 1420px; left: 680px; opacity: 1.0;-webkit-transform:rotate(0deg);" >
+      <img src="images/y.png" width="318" height="160" style="border-radius:15px; -moz-border-radius:25px;">
+    </div>
+    <div id="r5-n" hidden  style="z-index: 30; position: fixed; top: 1420px; left: 680px; opacity: 1.0;-webkit-transform:rotate(0deg);" >
+      <img src="images/no.png" width="318" height="160" style="border-radius:15px; -moz-border-radius:25px;">
+    </div>
+	</div>
+	<!--右側點選button 出現打勾-->
+	
+	<!--右側點選button 出現打勾-->
+  <div id="r6-block" class="right">
+    <div style="z-index: 30; position: fixed; top: 1645px; left: 680px; opacity: 1.0;-webkit-transform:rotate(0deg);" >
+      <img src="images/page2/answer/互動遊戲畫面2_20201127_SPORT_字.png" width="330" height="175">
+    </div>
+    <div id="r6-y" hidden style="z-index: 30; position: fixed; top: 1645px; left: 680px; opacity: 1.0;-webkit-transform:rotate(0deg);" >
+      <img src="images/y.png" width="318" height="160" style="border-radius:15px; -moz-border-radius:25px;">
+    </div>
+    <div id="r6-n" hidden style="z-index: 30; position: fixed; top: 1645px; left: 680px; opacity: 1.0;-webkit-transform:rotate(0deg);" >
+      <img src="images/no.png" width="318" height="160" style="border-radius:15px; -moz-border-radius:25px;">
+    </div>
+	</div>
+	<!--右側點選button 出現打勾-->
+	
+	
+	
+	
+	<!--左側對應右側所有連線-1-->
+  <div id="l1-block" class="left">
+    <div style="z-index: 20; position: fixed; top: 522px; left: 95px; opacity: 1.2;-webkit-transform:rotate(0deg);" >
+      <img src='images/page2/Q1一般/A1-1.jpg' width='318' height='160' style='border-radius:15px; -moz-border-radius:25px;'>
+    </div>
+    
+    <!--點選button 1出現打勾-->
+    <div id="l1-y" hidden style="z-index: 20; position: fixed; top: 522px; left: 95px; opacity: 1.2;-webkit-transform:rotate(0deg);" >
+      <img src="images/y.png" width="318" height="160" style="border-radius:15px; -moz-border-radius:25px;">
+    </div>
+    
+    <div id="l1-n" style="z-index: 20; position: fixed; top: 522px; left: 95px; opacity: 1.2;-webkit-transform:rotate(0deg);" >
+      <img src="images/n.png" width="318" height="160" style="border-radius:15px; -moz-border-radius:25px;">
+    </div>
+  </div>
+	<!--點選button 1出現打勾-->
+	
+	<div id="l1-r1" hidden style="z-index: 15; position: fixed; top: 603px; left: 425px; opacity: 1.2;-webkit-transform:rotate(0deg);" >
+		<img src="images/line2.png" width="280" height="30">
+	</div>
+	
+	<div id="l1-r2" hidden style="z-index: 10; position: fixed; top: 710px; left: 388px; opacity: 1.2;-webkit-transform:rotate(38deg);">
+		<img src="images/line2.png" width="360" height="30">
+	</div>
+	
+	<div id="l1-r3" hidden style="z-index: 10; position: fixed; top: 823px; left: 295px; opacity: 1.2;-webkit-transform:rotate(60deg);">
+		<img src="images/line1.png" width="530" height="30">
+	</div>
+	
+	<div id="l1-r4" hidden style="z-index: 10; position: fixed; top: 935px; left: 188px; opacity: 1.2;-webkit-transform:rotate(69deg);">
+		<img src="images/line2.png" width="745" height="30">
+	</div>
+	
+	<div id="l1-r6" hidden style="z-index: 10; position: fixed; top: 1150px; left: -50px; opacity: 1.2;-webkit-transform:rotate(78deg);">
+		<img src="images/line2.png" width="1200" height="50">
+	</div>
+	
+	<div id="l1-r5" hidden style="z-index: 10; position: fixed; top: 1040px; left: 70px; opacity: 1.2;-webkit-transform:rotate(74deg);">
+		<img src="images/line2.png" width="980" height="50">
+	</div>
+	
+ 	<!--左側對應右側所有連線-2-->
+  <div id="l2-block" class="left">
+    <div style="z-index: 20; position: fixed; top: 748px; left: 95px; opacity: 1.2;-webkit-transform:rotate(0deg);" >
+      <img src='images/page2/Q1一般/A1-1.jpg' width='318' height='160' style='border-radius:15px; -moz-border-radius:25px;'>
+    </div>
+    
+    <!--點選button 2出現打勾-->
+    <div id="l2-y" hidden style="z-index: 20; position: fixed; top: 748px; left: 95px; opacity: 1.2;-webkit-transform:rotate(0deg);" >
+      <img src="images/y.png" width="318" height="160" style="border-radius:15px; -moz-border-radius:25px;">
+    </div>
+    <div id="l2-n" style="z-index: 20; position: fixed; top: 748px; left: 95px; opacity: 1.2;-webkit-transform:rotate(0deg);" >
+      <img src="images/n.png" width="318" height="160" style="border-radius:15px; -moz-border-radius:25px;">
+    </div>
+	</div>
+	<!--點選button 2出現打勾-->
+	
+	<div id="l2-r1" hidden style="z-index: 15; position: fixed; top: 718px; left: 388px; opacity: 1.2;-webkit-transform:rotate(-38deg);" >
+		<img src="images/line2.png" width="360" height="30">
+	</div>
+	
+	<div id="l2-r2" hidden style="z-index: 15; position: fixed; top: 823px; left: 425px; opacity: 1.2;-webkit-transform:rotate(0deg);" >
+		<img src="images/line2.png" width="280" height="30">
+	</div>
+	
+	<div id="l2-r4" hidden style="z-index: 15; position: fixed; top: 1038px; left: 300px; opacity: 1.2;-webkit-transform:rotate(60deg);" >
+		<img src="images/line2.png" width="525" height="30">
+	</div>
+	
+	<div id="l2-r3" hidden style="z-index: 10; position: fixed; top: 930px; left: 388px; opacity: 1.2;-webkit-transform:rotate(38deg);">
+		<img src="images/line2.png" width="360" height="30">
+	</div>
+	
+	<div id="l2-r5" hidden style="z-index: 10; position: fixed; top: 1155px; left: 188px; opacity: 1.2;-webkit-transform:rotate(69deg);">
+		<img src="images/line2.png" width="745" height="30">
+	</div>
+	
+	<div id="l2-r6" hidden style="z-index: 10; position: fixed; top: 1260px; left: 70px; opacity: 1.2;-webkit-transform:rotate(74deg);">
+		<img src="images/line1.png" width="980" height="50">
+	</div> 		
+	
+	<!--左側對應右側所有連線-3-->
+  <div id="l3-block" class="left">
+    <div style="z-index: 20; position: fixed; top: 973px; left: 95px; opacity: 1.2;-webkit-transform:rotate(0deg);" >
+      <img src='images/page2/Q1一般/A1-1.jpg' width='318' height='160' style='border-radius:15px; -moz-border-radius:25px;'>
+    </div>
+    
+    <!--點選button 3出現打勾-->
+    <div id="l3-y" hidden style="z-index: 20; position: fixed; top: 973px; left: 95px; opacity: 1.2;-webkit-transform:rotate(0deg);" >
+      <img src="images/y.png" width="318" height="160" style="border-radius:15px; -moz-border-radius:25px;">
+    </div>
+    <div id="l3-n" style="z-index: 20; position: fixed; top: 973px; left: 95px; opacity: 1.2;-webkit-transform:rotate(0deg);" >
+      <img src="images/n.png" width="318" height="160" style="border-radius:15px; -moz-border-radius:25px;">
+    </div>
+	</div>
+	<!--點選button 3出現打勾-->
+	
+	<div id="l3-r1" hidden style="z-index: 10; position: fixed; top: 833px; left: 292px; opacity: 1.2;-webkit-transform:rotate(-60deg);">
+		<img src="images/line1.png" width="530" height="30">
+	</div>
+	
+	<div id="l3-r2" hidden style="z-index: 10; position: fixed; top: 950px; left: 388px; opacity: 1.2;-webkit-transform:rotate(-38deg);">
+		<img src="images/line2.png" width="340" height="30">
+	</div>
+	
+	<div id="l3-r3" hidden style="z-index: 15; position: fixed; top: 1050px; left: 425px; opacity: 1.2;-webkit-transform:rotate(0deg);" >
+		<img src="images/line2.png" width="280" height="30">
+	</div>
+	
+	<div id="l3-r4" hidden style="z-index: 10; position: fixed; top: 1150px; left: 388px; opacity: 1.2;-webkit-transform:rotate(38deg);">
+		<img src="images/line2.png" width="340" height="30">
+	</div>
+	
+	<div id="l3-r5" hidden style="z-index: 10; position: fixed; top: 1270px; left: 292px; opacity: 1.2;-webkit-transform:rotate(60deg);">
+		<img src="images/line2.png" width="530" height="30">
+	</div>
+	
+	<div id="l3-r6" hidden style="z-index: 10; position: fixed; top: 1380px; left: 185px; opacity: 1.2;-webkit-transform:rotate(69deg);">
+		<img src="images/line2.png" width="745" height="30">
+	</div>
+	
+
+	
+	<!--左側對應右側所有連線-4-->
+  <div id="l4-block" class="left">
+    <div style="z-index: 20; position: fixed; top: 1197px; left: 95px; opacity: 1.2;-webkit-transform:rotate(0deg);" >
+      <img src='images/page2/Q1一般/A1-1.jpg' width='318' height='160' style='border-radius:15px; -moz-border-radius:25px;'>
+    </div>
+    
+    <!--點選button 4出現打勾-->
+    <div id="l4-y" hidden style="z-index: 20; position: fixed; top: 1197px; left: 95px; opacity: 1.2;-webkit-transform:rotate(0deg);" >
+      <img src="images/y.png" width="318" height="160" style="border-radius:15px; -moz-border-radius:25px;">
+    </div>
+    <div id="l4-n" style="z-index: 20; position: fixed; top: 1197px; left: 95px; opacity: 1.2;-webkit-transform:rotate(0deg);" >
+      <img src="images/n.png" width="318" height="160" style="border-radius:15px; -moz-border-radius:25px;">
+    </div>
+	</div>
+	<!--點選button 4出現打勾-->
+	
+	<div id="l4-r2" hidden style="z-index: 10; position: fixed; top: 1053px; left: 292px; opacity: 1.2;-webkit-transform:rotate(-60deg);">
+		<img src="images/line1.png" width="530" height="30">
+	</div>
+	
+	<div id="l4-r3" hidden style="z-index: 10; position: fixed; top: 1175px; left: 388px; opacity: 1.2;-webkit-transform:rotate(-38deg);">
+		<img src="images/line2.png" width="340" height="30">
+	</div>	
+	
+	<div id="l4-r4" hidden style="z-index: 15; position: fixed; top: 1273px; left: 425px; opacity: 1.2;-webkit-transform:rotate(0deg);" >
+		<img src="images/line2.png" width="280" height="30">
+	</div>
+	
+	<div id="l4-r5" hidden style="z-index: 10; position: fixed; top: 1375px; left: 388px; opacity: 1.2;-webkit-transform:rotate(38deg);">
+		<img src="images/line2.png" width="340" height="30">
+	</div>
+	
+	<div id="l4-r6" hidden style="z-index: 10; position: fixed; top: 1489px; left: 292px; opacity: 1.2;-webkit-transform:rotate(60deg);">
+		<img src="images/line2.png" width="530" height="30">
+	</div>
+	
+	<div id="l4-r1" hidden style="z-index: 10; position: fixed; top: 935px; left: 185px; opacity: 1.2;-webkit-transform:rotate(-69deg);">
+		<img src="images/line2.png" width="745" height="30">
+	</div>
+	
+	<!--左側對應右側所有連線-5-->
+  <div id="l5-block" class="left">
+    <div style="z-index: 20; position: fixed; top: 1425px; left: 95px; opacity: 1.2;-webkit-transform:rotate(0deg);" >
+      <img src='images/page2/Q1一般/A1-1.jpg' width='318' height='160' style='border-radius:15px; -moz-border-radius:25px;'>
+    </div>
+    
+    <!--點選button 5出現打勾-->
+    <div id="l5-y" hidden style="z-index: 20; position: fixed; top: 1425px; left: 95px; opacity: 1.2;-webkit-transform:rotate(0deg);" >
+      <img src="images/y.png" width="318" height="160" style="border-radius:15px; -moz-border-radius:25px;">
+    </div>
+    <div id="l5-n" style="z-index: 20; position: fixed; top: 1425px; left: 95px; opacity: 1.2;-webkit-transform:rotate(0deg);" >
+      <img src="images/n.png" width="318" height="160" style="border-radius:15px; -moz-border-radius:25px;">
+    </div>
+	</div>
+	<!--點選button 5出現打勾-->
+	
+	<div id="l5-r3" hidden style="z-index: 10; position: fixed; top: 1265px; left: 292px; opacity: 1.2;-webkit-transform:rotate(-60deg);">
+		<img src="images/line2.png" width="530" height="30">
+	</div>
+	
+	<div id="l5-r4" hidden style="z-index: 10; position: fixed; top: 1383px; left: 388px; opacity: 1.2;-webkit-transform:rotate(-38deg);">
+		<img src="images/line1.png" width="340" height="30">
+	</div>	
+	
+	<div id="l5-r5" hidden style="z-index: 15; position: fixed; top: 1483px; left: 425px; opacity: 1.2;-webkit-transform:rotate(0deg);" >
+		<img src="images/line2.png" width="280" height="30">
+	</div>
+	
+	<div id="l5-r6" hidden style="z-index: 10; position: fixed; top: 1585px; left: 388px; opacity: 1.2;-webkit-transform:rotate(38deg);">
+		<img src="images/line2.png" width="340" height="30">
+	</div>
+	
+	
+	<div id="l5-r2" hidden style="z-index: 10; position: fixed; top: 1148px; left: 185px; opacity: 1.2;-webkit-transform:rotate(-69deg);">
+		<img src="images/line2.png" width="745" height="30">
+	</div>
+	
+	<div id="l5-r1" hidden style="z-index: 10; position: fixed; top: 1040px; left: 72px; opacity: 1.2;-webkit-transform:rotate(-74deg);">
+		<img src="images/line2.png" width="955" height="50">
+	</div>
+	
+	<!--左側對應右側所有連線-6-->
+  <div id="l6-block" class="left">
+    <div style="z-index: 20; position: fixed; top: 1653px; left: 95px; opacity: 1.2;-webkit-transform:rotate(0deg);" >
+      <img src='images/page2/Q1一般/A1-1.jpg' width='318' height='160' style='border-radius:15px; -moz-border-radius:25px;'>
+    </div>
+    
+    <!--點選button 6出現打勾-->
+    <div id="l6-y" hidden style="z-index: 20; position: fixed; top: 1653px; left: 95px; opacity: 1.2;-webkit-transform:rotate(0deg);" >
+      <img src="images/y.png" width="318" height="160" style="border-radius:15px; -moz-border-radius:25px;">
+    </div>
+    <div id="l6-n" style="z-index: 20; position: fixed; top: 1653px; left: 95px; opacity: 1.2;-webkit-transform:rotate(0deg);" >
+      <img src="images/n.png" width="318" height="160" style="border-radius:15px; -moz-border-radius:25px;">
+    </div>
+	</div>
+	<!--點選button 6出現打勾-->
+	
+	<div id="l6-r6" hidden style="z-index: 15; position: fixed; top: 1723px; left: 425px; opacity: 1.2;-webkit-transform:rotate(0deg);" >
+		<img src="images/line2.png" width="280" height="30">
+	</div>
+	
+	<div id="l6-r5" hidden style="z-index: 10; position: fixed; top: 1620px; left: 388px; opacity: 1.2;-webkit-transform:rotate(-38deg);">
+		<img src="images/line1.png" width="360" height="30">
+	</div>
+	
+	<div id="l6-r4" hidden style="z-index: 10; position: fixed; top: 1503px; left: 295px; opacity: 1.2;-webkit-transform:rotate(-60deg);">
+		<img src="images/line2.png" width="530" height="30">
+	</div>
+	
+	<div id="l6-r3" hidden style="z-index: 10; position: fixed; top: 1400px; left: 188px; opacity: 1.2;-webkit-transform:rotate(-69deg);">
+		<img src="images/line2.png" width="745" height="30">
+	</div>
+	
+	<div id="l6-r1" hidden style="z-index: 10; position: fixed; top: 1150px; left: -50px; opacity: 1.2;-webkit-transform:rotate(-78deg);">
+		<img src="images/line2.png" width="1200" height="50">
+	</div>
+	
+	<div id="l6-r2" hidden style="z-index: 10; position: fixed; top: 1240px; left: 70px; opacity: 1.2;-webkit-transform:rotate(-74deg);">
+		<img src="images/line2.png" width="980" height="50">
+	</div>
+	
+</body>		
+	
+</html>
+
+

@@ -1,0 +1,188 @@
+﻿<html>
+<head>	
+	<!--meta_Start-->
+	<!-- <meta http-equiv="refresh" content="5; url=page3.html"></meta> -->
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="Page-Enter" content="revealTrans(Duration=20,Transition=13)">
+	<meta http-equiv="Page-Exit" content="revealTrans(Duration=20,Transition=13)">
+	<meta http-equiv="expires" content="0"> <!--1/30新加入用戶端防止快取 -->
+	<meta http-equiv="cache-control" content="no-cache"> <!--1/30新加入用戶端防止快取 -->
+	<meta http-equiv="pragma" content="no-cache"> <!--1/30新加入用戶端防止快取 -->
+	<!--meta_end-->
+	
+	<!--css-->
+	<link rel="stylesheet" type="text/css" href="css/webkit-animation.css" /><!--CSS INPUT-->
+	<link rel="stylesheet" type="text/css" href="css/animate.css"><!--特效-->
+	<link rel="stylesheet" type="text/css" href="css/webkit-animation-duration.css"><!--特效延遲-->
+	<link rel='stylesheet' href='css/style.css'><!--touchaudio-->
+	<style type="text/css">
+
+	#photo1
+	{z-index: 2; position: fixed; top: 0px; left: 0px; opacity: 1.2;}
+	#photo2
+	{z-index: 2; position: fixed; top: 1720px; left: 880px; opacity: 1.0;}
+	#photo3
+	{z-index: 2; position: fixed; top: 1700px; left: 530px; opacity: 1.0;}
+	
+	#tablelist1
+	{z-index: 10; position: fixed; top: 600px; left: 0px; opacity: 1.2;}
+	
+	#tablelist2
+	{z-index: 10; position: fixed; top: 50px; left: 0px; opacity: 1.2;}
+	
+	table tbody {
+	display:block;
+	height:500px;
+	overflow-y:scroll;
+	border:1px solid #000;
+	text-align:center;
+	border-collapse:collapse;
+	}
+	
+	table thead, tbody tr {
+	display:table;
+	width:100%;
+	table-layout:fixed;
+	}
+	
+	table thead {
+	width: calc( 100% - 1em )
+	}
+	table thead th{ background:#ccc;
+	}
+	th { 
+	background-color: #009FCC;
+	padding:10px;
+	border:1px solid #000;
+	color:#fff;
+	} 
+	td { 
+	border:1px solid #000;
+	padding:5px;
+	background-color:#cccccc;
+	}
+  	</style>
+</head>
+	
+<body>	
+	<div id="tablelist1" >
+		<table > 
+			<tr> 
+				<th>日期</th> 
+				<th>當日總次數</th>
+				<th>當日成功次數</th>
+				<th>當日失敗次數</th>
+				
+			</tr> 
+			<tr w3-repeat="rows">
+				<td>{{date}}</td>
+				<td>{{total}}</td>
+				<td>{{pass}}</td>
+				<td>{{fail}}</td>
+			  </tr>
+			<!-- <tr> 
+				<td>2020/11/30 19:43</th> 
+				<td>924</td>
+				<td>324</td>
+				<td>600</td>
+			</tr>
+			
+			<tr> 
+				<td>2020/11/29 19:43</th> 
+				<td>624</td>
+				<td>324</td>
+				<td>300</td>
+			</tr> -->
+		</table>
+	</div>
+	<div id="tablelist2" >
+		<table > 
+			<tr> 
+				<th>目前狀態</th> 
+				<th>總次數</th>
+				<th>成功次數</th>
+				<th>失敗次數</th>
+				
+			</tr> 
+			
+			<tr> 
+				<td>現在累計</th> 
+				<td>{{total}}</td>
+				<td>{{pass}}</td>
+				<td>{{fail}}</td>
+			</tr>
+		</table>
+	</div>
+ 	<div id="photo1">
+		<img src="images/statistics/statistics_bg.jpg" width="1080" height="1920">
+	</div>
+	</div>
+	<div id="photo2">
+		<a href="index.html">
+			<img src="images/page4/互動遊戲畫面4_返回鍵_20201127.png" width="159.84" height="159.84">
+		</a>
+	</div>
+	
+	<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-firestore.js"></script>
+	<script src="https://www.w3schools.com/lib/w3.js"></script> 
+	<script>
+		// Initialize Cloud Firestore through Firebase
+		firebase.initializeApp({
+		// apiKey: '### FIREBASE API KEY ###',
+		// authDomain: '### FIREBASE AUTH DOMAIN ###',
+		projectId: "inspired-berm-292410"
+		});
+		var firestore = firebase.firestore();
+		const docRef = firestore.collection("AWA");
+		
+		// initial table
+		var total = {"total": 0,"pass": 0,"fail": 0};
+		var date_rows = [];
+		docRef.get().then(docs => {
+			docs.forEach(doc => {
+				// console.log(doc.id, doc.data());
+				let data = doc.data();
+				total["fail"] += data.fail;
+				total["pass"] += data.pass;
+				total["total"] += data.pass+data.fail;
+				date_rows.push({"date":doc.id, "total":data.fail+data.pass, "pass":data.pass, "fail":data.fail});
+			});
+			w3.displayObject("tablelist1", {"rows":date_rows});
+			w3.displayObject("tablelist2", total);
+		}).catch(error => {
+			console.log('Error: ', error);
+		});
+
+		// realtime update
+		const today  = new Date().toISOString().substr(0,10);
+		docRef.doc(today).onSnapshot(doc => {
+			let data = doc.data();
+			$("#tablelist1 tr:last-child").html(`<td>${doc.id}</td><td>${data.fail+data.pass}</td><td>${data.pass}</td><td>${data.fail}</td>`);
+		});
+
+		// w3.getHttpObject("http://localhost/AWA/log.php?type=statistics", fillTables);
+		// function fillTables(res){
+		// 	//console.log(res);
+		// 	var total = {"total": 0,"pass": 0,"fail": 0};
+		// 	var date_rows = [];
+		// 	Object.keys(res).forEach(function(item,index){
+		// 		const fail = (parseInt(res[item][0]))? parseInt(res[item][0]): 0;
+		// 		const pass = (parseInt(res[item][1]))? parseInt(res[item][1]): 0;
+
+		// 		total["fail"] += fail;
+		// 		total["pass"] += pass;
+		// 		total["total"] += pass+fail;
+		// 		date_rows.push({"date":item, "total":fail+pass, "pass":pass, "fail":fail});
+		// 	});
+			
+		// 	w3.displayObject("tablelist1", {"rows":date_rows});
+		// 	w3.displayObject("tablelist2", total);
+		// }
+	</script>	
+</body>
+</html>
+
+
+
